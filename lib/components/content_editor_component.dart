@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utweat/helpers/utweat_generator.dart';
+import 'package:utweat/services/add_content/add_content_bloc.dart';
 
 class ContentEditorController extends StatefulWidget {
   const ContentEditorController({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class ContentEditorController extends StatefulWidget {
 }
 
 class _ContentEditorControllerState extends State<ContentEditorController> {
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
   final FocusNode _contentFocusNode = FocusNode();
@@ -22,6 +24,8 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
     super.initState();
 
     _contentController.addListener(() {
+      if (_contentController.text.isEmpty) return;
+
       UTweatGenerator uTweatGenerator =
           UTweatGenerator(_contentController.text);
 
@@ -153,9 +157,9 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             ),
             child: TextField(
               autofocus: true,
-              controller: _nameController,
+              controller: _descriptionController,
               decoration: const InputDecoration(
-                labelText: 'Enter the name of pattern',
+                labelText: 'Enter the description of pattern',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -183,12 +187,22 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
                   child: const Text("Cancel"),
                 ),
                 TextButton(
-                  onPressed: () {
-                    UTweatGenerator uTweatGenerator =
-                        UTweatGenerator(_contentController.text);
+                  onPressed: _contentController.text.isEmpty ||
+                          _descriptionController.text.isEmpty
+                      ? null
+                      : () {
+                          UTweatGenerator uTweatGenerator =
+                              UTweatGenerator(_contentController.text);
 
-                    print(uTweatGenerator.listString);
-                  },
+                          context.read<AddContentBloc>().add(
+                                OnCreateNewContentEvent({
+                                  "description": _descriptionController.text,
+                                  "content": _contentController.text,
+                                  "possibilities":
+                                      uTweatGenerator.possibilities,
+                                }),
+                              );
+                        },
                   child: const Text("Create"),
                 ),
               ],

@@ -1,31 +1,35 @@
 class ContentModel {
-  final String name;
+  final String uid;
+  final String description;
   final String content;
   final int possibilities;
-  final List<String> tweets;
+  final List<String> contents;
 
   const ContentModel({
-    required this.name,
+    required this.uid,
+    required this.description,
     required this.content,
     required this.possibilities,
-    this.tweets = const [],
+    this.contents = const [],
   });
 
   factory ContentModel.fromJson(Map<String, dynamic> json) {
     return ContentModel(
-      name: json['name'] as String,
+      uid: (json['uid'] as int).toString(),
+      description: json['description'] as String,
       content: json['content'] as String,
       possibilities: json['possibilities'] as int,
-      tweets: json['tweets'] as List<String>,
+      contents: json['contents'] as List<String>,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'uid': uid,
+      'description': description,
       'content': content,
       'possibilities': possibilities,
-      'tweets': tweets,
+      'contents': contents,
     };
   }
 }

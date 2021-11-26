@@ -36,6 +36,18 @@ void main() {
       // ASSERT
       expect(value, 4);
     });
+
+    test("Should return 8 possibilities", () {
+      // ARRANGE
+      final UTweatGenerator utweatGenerator =
+          UTweatGenerator("{test|test2 {re1|re2}}{toto|tata}");
+
+      // ACT
+      int value = utweatGenerator.possibilities;
+
+      // ASSERT
+      expect(value, 8);
+    });
   });
 
   group("UTweatGenerator.listString", () {
@@ -70,5 +82,45 @@ void main() {
         expect(values.contains(value), true);
       }
     });
+
+    // test("Should return 3 results (2)", () {
+    //   // ARRANGE
+    //   final UTweatGenerator utweatGenerator =
+    //       UTweatGenerator("{hello|coucou {john|jane}}");
+
+    //   // ACT
+    //   List<String> values = utweatGenerator.listString;
+
+    //   // ASSERT
+    //   expect(values.length, 3);
+
+    //   for (var value in [
+    //     "hello jane",
+    //     "coucou jane",
+    //     "coucou john",
+    //   ]) {
+    //     expect(values.contains(value), true);
+    //   }
+    // });
+
+    // test("Should return 4 results (2)", () {
+    //   // ARRANGE
+    //   final UTweatGenerator utweatGenerator =
+    //       UTweatGenerator("{hello|coucou {john|jane|{qsd|sqdff}}}");
+
+    //   // ACT
+    //   List<String> values = utweatGenerator.listString;
+
+    //   // ASSERT
+    //   expect(values.length, 4);
+
+    //   for (var value in [
+    //     "hello jane",
+    //     "coucou jane",
+    //     "coucou john",
+    //   ]) {
+    //     expect(values.contains(value), true);
+    //   }
+    // });
   });
 }

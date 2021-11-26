@@ -8,14 +8,17 @@ abstract class ListContentState extends Equatable {
 }
 
 class ListContentInitialState extends ListContentState {
+  final int refresh;
   final List<ContentModel> contents;
 
   const ListContentInitialState({
+    required this.refresh,
     required this.contents,
   });
 
   @override
   List<Object> get props => [
+        refresh,
         contents,
       ];
 }

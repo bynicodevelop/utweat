@@ -7,15 +7,20 @@ abstract class ListContentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class OnLoadedContentEvent extends ListContentEvent {
+class OnLoadedContentEvent extends ListContentEvent {}
+
+class _OnLoadedContentEvent extends ListContentEvent {
+  final int refresh;
   final List<ContentModel> contents;
 
-  const OnLoadedContentEvent({
+  const _OnLoadedContentEvent({
+    required this.refresh,
     required this.contents,
   });
 
   @override
   List<Object> get props => [
+        refresh,
         contents,
       ];
 }

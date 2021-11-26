@@ -12,16 +12,35 @@ class ListContentBloc extends Bloc<ListContentEvent, ListContentState> {
   ListContentBloc({
     required this.contentRepository,
   }) : super(const ListContentInitialState(
+          refresh: 0,
           contents: [],
         )) {
     contentRepository.contents.listen((contents) {
-      add(OnLoadedContentEvent(
+      add(_OnLoadedContentEvent(
+        refresh: DateTime.now().microsecondsSinceEpoch,
         contents: contents,
       ));
     });
 
-    on<OnLoadedContentEvent>((event, emit) {
+    on<OnLoadedContentEvent>((event, emit) async {
+      await contentRepository.load();
+
+      List<ContentModel> contents =
+          await contentRepository.contents.asyncMap((content) {
+        return content;
+      }).first;
+
+      add(
+        _OnLoadedContentEvent(
+          refresh: DateTime.now().microsecondsSinceEpoch,
+          contents: contents,
+        ),
+      );
+    });
+
+    on<_OnLoadedContentEvent>((event, emit) {
       emit(ListContentInitialState(
+        refresh: DateTime.now().microsecondsSinceEpoch,
         contents: event.contents,
       ));
     });

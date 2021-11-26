@@ -5,26 +5,34 @@ class UTweatGenerator {
   UTweatGenerator(
     this.pattern,
   ) {
-    RegExp regExp = RegExp(r"\{([^\{\}]*)\}");
+    RegExp regExp = RegExp(r"\{([^\{\}]*)\}*");
 
     matches = regExp.allMatches(pattern);
+  }
+
+  Iterable<RegExpMatch> _findPattern(String content) {
+    RegExp regExp = RegExp(r"\{([^\{\}]*)\}*");
+
+    return regExp.allMatches(content);
   }
 
   String _generate() {
     String content = pattern;
 
-    List<int> nMaches = [];
+    Iterable<RegExpMatch> localMatched =
+        _findPattern(content).toList().reversed;
 
-    for (int i = 0; i < matches.length; i++) {
-      final List<String> pin = matches.elementAt(i).group(1)!.split("|");
-      nMaches.add(pin.length);
+    while (localMatched.isNotEmpty) {
+      final List<String> pin = localMatched.elementAt(0).group(1)!.split("|");
 
       pin.shuffle();
 
       content = content.replaceAll(
-        "{${matches.elementAt(i).group(1)}}",
+        "{${localMatched.elementAt(0).group(1)}}",
         pin.first,
       );
+
+      localMatched = _findPattern(content).toList().reversed;
     }
 
     return content;
