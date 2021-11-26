@@ -36,7 +36,6 @@ class HomeScreen extends StatelessWidget {
       body: BlocListener<GenerateContentBloc, GenerateContentState>(
         listener: (context, state) async {
           if (state is GenerateContentLoadedState) {
-            // print(state.content);
             Map<String, dynamic> query = {
               "text": state.content,
             };
