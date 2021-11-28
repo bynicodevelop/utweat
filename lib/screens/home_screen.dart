@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:utweat/components/content_editor_component.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
 import 'package:utweat/services/delete_content/delete_content_bloc.dart';
@@ -32,20 +32,29 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('UTweat'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _modal(context),
+          ),
+        ],
       ),
       body: BlocListener<GenerateContentBloc, GenerateContentState>(
         listener: (context, state) async {
           if (state is GenerateContentLoadedState) {
-            Map<String, dynamic> query = {
-              "text": state.content,
-            };
+            await Clipboard.setData(
+              ClipboardData(
+                text: state.content,
+              ),
+            );
 
-            await launch(Uri(
-                    scheme: "https",
-                    host: "twitter.com",
-                    path: "intent/tweet",
-                    queryParameters: query)
-                .toString());
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Your content is copied to clipboard',
+                ),
+              ),
+            );
 
             context.read<ListContentBloc>().add(OnLoadedContentEvent());
           }
@@ -139,10 +148,6 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _modal(context),
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -1,4 +1,4 @@
-package com.example.utweat
+package com.nicodevelop.utweat
 
 import io.flutter.embedding.android.FlutterActivity
 

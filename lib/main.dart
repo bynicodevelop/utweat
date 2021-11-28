@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utweat/config/constants.dart';
 import 'package:utweat/respositories/abstracts/database_repository.dart';
 import 'package:utweat/respositories/content_repository.dart';
 import 'package:utweat/respositories/sqlite_repository.dart';
@@ -63,7 +64,10 @@ class App extends StatelessWidget {
         title: 'UTweat',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: kPrimaryMaterialColor,
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: kPrimaryMaterialColor,
+          ),
         ),
         home: const HomeScreen(),
       ),

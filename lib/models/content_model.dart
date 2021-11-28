@@ -3,6 +3,7 @@ class ContentModel {
   final String description;
   final String content;
   final int possibilities;
+  final int accountUid;
   final List<String> contents;
 
   const ContentModel({
@@ -10,6 +11,7 @@ class ContentModel {
     required this.description,
     required this.content,
     required this.possibilities,
+    required this.accountUid,
     this.contents = const [],
   });
 
@@ -19,6 +21,7 @@ class ContentModel {
       description: json['description'] as String,
       content: json['content'] as String,
       possibilities: json['possibilities'] as int,
+      accountUid: json['account_uid'] as int,
       contents: json['contents'] as List<String>,
     );
   }
@@ -29,6 +32,7 @@ class ContentModel {
       'description': description,
       'content': content,
       'possibilities': possibilities,
+      'account_uid': accountUid,
       'contents': contents,
     };
   }

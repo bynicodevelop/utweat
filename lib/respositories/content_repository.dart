@@ -45,6 +45,7 @@ class ContentRepository {
       ...{
         "uid": _contentList.length + 1,
         "contents": List<String>.from([]),
+        "account_uid": 1,
       },
     });
 
@@ -88,7 +89,9 @@ class ContentRepository {
 
     return ContentModel.fromJson({
       ...map,
-      ...{"contents": contentsUsed.map<String>((e) => e["content"]).toList()},
+      ...{
+        "contents": contentsUsed.map<String>((e) => e["content"]).toList(),
+      },
     });
   }
 
