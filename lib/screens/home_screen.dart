@@ -39,32 +39,76 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocListener<GenerateContentBloc, GenerateContentState>(
-        listener: (context, state) async {
-          if (state is GenerateContentLoadedState) {
-            await Clipboard.setData(
-              ClipboardData(
-                text: state.content,
-              ),
-            );
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<GenerateContentBloc, GenerateContentState>(
+            listener: (context, state) async {
+              if (state is GenerateContentLoadedState) {
+                await Clipboard.setData(
+                  ClipboardData(
+                    text: state.content,
+                  ),
+                );
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Your content is copied to clipboard',
-                ),
-              ),
-            );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Your content is copied to clipboard',
+                    ),
+                  ),
+                );
 
-            context.read<ListContentBloc>().add(OnLoadedContentEvent());
-          }
-        },
+                context.read<ListContentBloc>().add(OnLoadedContentEvent());
+              }
+            },
+          ),
+          BlocListener<DeleteContentBloc, DeleteContentState>(
+            listener: (context, state) async {
+              if (state is DeleteContentSuccessState) {
+                context.read<ListContentBloc>().add(OnLoadedContentEvent());
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<ListContentBloc, ListContentState>(
           builder: (context, state) {
             if (state is ListContentInitialState) {
               return state.contents.isEmpty
-                  ? const Center(
-                      child: Text("No content"),
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: "Try to enter this: ",
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: [
+                                TextSpan(
+                                    text: "{hello|bonjour} {world|monde} ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2!
+                                        .copyWith(
+                                          fontStyle: FontStyle.italic,
+                                        )),
+                                const TextSpan(
+                                  text: "then look at the possibilities",
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "To start click on +",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.all(8),

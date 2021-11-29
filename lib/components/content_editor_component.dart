@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +21,17 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
   final FocusNode _contentFocusNode = FocusNode();
 
   int _int = 0;
+  late TextSelection _selection;
 
   @override
   void initState() {
     super.initState();
 
     _contentController.addListener(() {
+      if (_contentController.selection.start > -1) {
+        setState(() => _selection = _contentController.selection);
+      }
+
       if (_contentController.text.isEmpty) return;
 
       UTweatGenerator uTweatGenerator =
@@ -65,69 +72,78 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
                 ),
                 Row(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        int start = 0;
-                        int end = 0;
-
-                        final TextSelection selection =
-                            _contentController.selection;
-
-                        if (!_contentFocusNode.hasFocus) {
-                          _contentFocusNode.requestFocus();
-                        } else {
-                          start = selection.start;
-                          end = selection.end;
-                        }
-
-                        if (start == end) {
-                          _contentController.text =
-                              _contentController.text.replaceRange(
-                            start,
-                            end,
-                            "{|}",
-                          );
-
-                          _contentController.selection =
-                              TextSelection.collapsed(
-                            offset: end + 1,
-                          );
-                        } else {
-                          String selectedText =
-                              selection.textInside(_contentController.text);
-
-                          _contentController.text =
-                              _contentController.text.replaceRange(
-                            start,
-                            end,
-                            "{$selectedText|}",
-                          );
-
-                          _contentController.selection =
-                              TextSelection.collapsed(
-                            offset: end + 1,
-                          );
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(30, 30),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 10.0,
                       ),
-                      child: const Text("{ }"),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          int start = 0;
+                          int end = 0;
+
+                          if (!_contentFocusNode.hasFocus &&
+                              (Platform.isIOS || Platform.isAndroid)) {
+                            _contentFocusNode.requestFocus();
+                          } else {
+                            start = _selection.start;
+                            end = _selection.end;
+                          }
+
+                          if (start == end) {
+                            _contentController.text =
+                                _contentController.text.replaceRange(
+                              start,
+                              end,
+                              "{|}",
+                            );
+
+                            _contentController.selection =
+                                TextSelection.collapsed(
+                              offset: end + 1,
+                            );
+                          } else {
+                            String selectedText =
+                                _selection.textInside(_contentController.text);
+
+                            _contentController.text =
+                                _contentController.text.replaceRange(
+                              start,
+                              end,
+                              "{$selectedText|}",
+                            );
+
+                            _contentController.selection =
+                                TextSelection.collapsed(
+                              offset: end + 1,
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(
+                            40,
+                            35,
+                          ),
+                        ),
+                        child: Text(
+                          "{ }",
+                          style: Theme.of(context).textTheme.overline!.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
+                      ),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         int start = 0;
                         int end = 0;
 
-                        final TextSelection selection =
-                            _contentController.selection;
-
-                        if (!_contentFocusNode.hasFocus) {
+                        if (!_contentFocusNode.hasFocus &&
+                            (Platform.isIOS || Platform.isAndroid)) {
                           _contentFocusNode.requestFocus();
                         } else {
-                          start = selection.start;
-                          end = selection.end;
+                          start = _selection.start;
+                          end = _selection.end;
                         }
 
                         _contentController.text =
@@ -143,9 +159,17 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        minimumSize: const Size(30, 30),
+                        minimumSize: const Size(
+                          40,
+                          35,
+                        ),
                       ),
-                      child: const Text("|"),
+                      child: Text(
+                        "|",
+                        style: Theme.of(context).textTheme.overline!.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
                     )
                   ],
                 ),
@@ -158,7 +182,7 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             ),
             child: TextField(
               keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
+              // textInputAction: TextInputAction.next,
               autofocus: true,
               controller: _descriptionController,
               decoration: const InputDecoration(
@@ -171,10 +195,10 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             controller: _contentController,
             focusNode: _contentFocusNode,
             keyboardType: TextInputType.multiline,
-            textInputAction: TextInputAction.done,
+            // textInputAction: TextInputAction.done,
             maxLines: null,
             decoration: InputDecoration(
-              labelText: 'Enter your Tweet',
+              labelText: 'Enter your content',
               border: const OutlineInputBorder(),
               helperText: "Possibilites : $_int",
             ),
