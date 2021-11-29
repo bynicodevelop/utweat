@@ -125,8 +125,8 @@ class HomeScreen extends StatelessWidget {
                                     duration: const Duration(
                                       seconds: 3,
                                     ),
-                                    content:
-                                        const Text("Your content was deleted"),
+                                    content: const Text(
+                                        "Deletion of your content, in progress..."),
                                     action: SnackBarAction(
                                       label: "Cancel",
                                       onPressed: () {
