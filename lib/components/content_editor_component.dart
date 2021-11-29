@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utweat/helpers/utweat_generator.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
@@ -156,6 +157,8 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
               bottom: 20.0,
             ),
             child: TextField(
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
               autofocus: true,
               controller: _descriptionController,
               decoration: const InputDecoration(
@@ -168,6 +171,7 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             controller: _contentController,
             focusNode: _contentFocusNode,
             keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.done,
             maxLines: null,
             decoration: InputDecoration(
               labelText: 'Enter your Tweet',
