@@ -1,10 +1,12 @@
 class UTweatGenerator {
   final String pattern;
   late final Iterable<RegExpMatch> matches;
+  final String branding;
 
   UTweatGenerator(
-    this.pattern,
-  ) {
+    this.pattern, {
+    this.branding = "@byutweat",
+  }) {
     RegExp regExp = RegExp(r"\{([^\{\}]*)\}");
 
     matches = regExp.allMatches(pattern);
@@ -25,7 +27,7 @@ class UTweatGenerator {
     List<String> list = [];
 
     while (list.length < possibilities) {
-      String content = _generate();
+      String content = "${_generate()} $branding";
 
       if (!list.contains(content)) {
         list.add(content);

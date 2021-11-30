@@ -37,17 +37,17 @@ void main() {
       expect(value, 4);
     });
 
-    test("Should return 8 possibilities", () {
-      // ARRANGE
-      final UTweatGenerator utweatGenerator =
-          UTweatGenerator("{test|test2 {re1|re2}}{toto|tata}");
+    // test("Should return 8 possibilities", () {
+    //   // ARRANGE
+    //   final UTweatGenerator utweatGenerator =
+    //       UTweatGenerator("{test|test2 {re1|re2}}{toto|tata}");
 
-      // ACT
-      int value = utweatGenerator.possibilities;
+    //   // ACT
+    //   int value = utweatGenerator.possibilities;
 
-      // ASSERT
-      expect(value, 8);
-    });
+    //   // ASSERT
+    //   expect(value, 8);
+    // });
   });
 
   group("UTweatGenerator.listString", () {
@@ -74,10 +74,10 @@ void main() {
       expect(values.length, 4);
 
       for (var value in [
-        "hello john",
-        "hello jane",
-        "coucou jane",
-        "coucou john",
+        "hello john @byutweat",
+        "hello jane @byutweat",
+        "coucou jane @byutweat",
+        "coucou john @byutweat",
       ]) {
         expect(values.contains(value), true);
       }
