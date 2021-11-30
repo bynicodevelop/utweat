@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utweat/helpers/translate.dart';
 import 'package:utweat/helpers/utweat_generator.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
 
@@ -182,12 +183,12 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             ),
             child: TextField(
               keyboardType: TextInputType.text,
-              // textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.next,
               autofocus: true,
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Enter the description of pattern',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: t(context)!.placeholderName,
+                border: const OutlineInputBorder(),
               ),
             ),
           ),
@@ -195,12 +196,12 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
             controller: _contentController,
             focusNode: _contentFocusNode,
             keyboardType: TextInputType.multiline,
-            // textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.done,
             maxLines: null,
             decoration: InputDecoration(
-              labelText: 'Enter your content',
+              labelText: t(context)!.placeholderTweet,
               border: const OutlineInputBorder(),
-              helperText: "Possibilites : $_int",
+              helperText: t(context)!.helperTweetPlaceholder(_int),
             ),
           ),
           Padding(
@@ -212,7 +213,7 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                  child: Text(t(context)!.cancelButton),
                 ),
                 TextButton(
                   onPressed: _contentController.text.isEmpty ||
@@ -231,7 +232,7 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
                                 }),
                               );
                         },
-                  child: const Text("Create"),
+                  child: Text(t(context)!.createButton),
                 ),
               ],
             ),

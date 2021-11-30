@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utweat/components/content_editor_component.dart';
+import 'package:utweat/helpers/translate.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
 import 'package:utweat/services/delete_content/delete_content_bloc.dart';
 import 'package:utweat/services/generate_content/generate_content_bloc.dart';
@@ -51,9 +52,9 @@ class HomeScreen extends StatelessWidget {
                 );
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'Your content is copied to clipboard',
+                      t(context)!.contentCopiedToClipboard,
                     ),
                   ),
                 );
@@ -83,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "Try to enter this: ",
+                              text: t(context)!.helperNoContentPart1,
                               style: Theme.of(context).textTheme.bodyText2,
                               children: [
                                 TextSpan(
@@ -94,17 +95,17 @@ class HomeScreen extends StatelessWidget {
                                         .copyWith(
                                           fontStyle: FontStyle.italic,
                                         )),
-                                const TextSpan(
-                                  text: "then look at the possibilities",
+                                TextSpan(
+                                  text: t(context)!.helperNoContentPart2,
                                 )
                               ],
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "To start click on +",
+                            t(context)!.gettingStarted,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -125,10 +126,10 @@ class HomeScreen extends StatelessWidget {
                                     duration: const Duration(
                                       seconds: 3,
                                     ),
-                                    content: const Text(
-                                        "Deletion of your content, in progress..."),
+                                    content: Text(
+                                        t(context)!.deletionContentMessage),
                                     action: SnackBarAction(
-                                      label: "Cancel",
+                                      label: t(context)!.cancelButton,
                                       onPressed: () {
                                         context
                                             .read<ListContentBloc>()
@@ -166,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                                 state.contents[index].description,
                               ),
                               subtitle: Text(
-                                "Reste : ${state.contents[index].possibilities - state.contents[index].contents.length}",
+                                "Tweets : ${state.contents[index].possibilities - state.contents[index].contents.length}",
                               ),
                               trailing: IconButton(
                                 onPressed: () async {

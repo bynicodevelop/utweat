@@ -1,0 +1,52 @@
+{
+    "contentCopiedToClipboard": "Votre contenu a été copié dans le presse-papier.",
+    "@contentCopiedToClipboard": {
+      "description": "Your content is copied to clipboard"
+    },
+    "helperNoContentPart1": "Essayez d'entrer ceci : ",
+    "@helperNoContentPart1": {
+      "description": "Try to enter this: "
+    },
+    "helperNoContentPart2": "puis voyez les résultats possibles.",
+    "@helperNoContentPart2": {
+      "description": "then look at the possibilities"
+    },
+    "gettingStarted": "Pour commencer cliquez sur +",
+    "@gettingStarted": {
+      "description": "To start click on +"
+    },
+    "deletionContentMessage": "Suppression de votre contenu, en cours...",
+    "@deletionContentMessage": {
+      "description": "Deletion of your content, in progress..."
+    },
+    "tweetEditor": "Editeur de tweets",
+    "@tweetEditor": {
+      "description": "Tweet editor"
+    },
+    "placeholderName": "Entrez la description de votre Tweet",
+    "@placeholderName": {
+      "description": "Enter the description of pattern"
+    },
+    "placeholderTweet": "Entrez votre contenu",
+    "@placeholderTweet": {
+      "description": "Enter your content"
+    },
+    "helperTweetPlaceholder": "Possibilités : {n}",
+    "@helperTweetPlaceholder": {
+      "description": "Possibilities: {n}",
+      "placeholders": {
+        "n": {
+          "type": "int",
+          "example": "0"
+        }
+      }
+    },
+    "cancelButton": "Anuller",
+    "@cancelButton": {
+      "description": "Cancel"
+    },
+    "createButton": "Créer",
+    "@createButton": {
+      "description": "Create"
+    }
+}
