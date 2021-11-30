@@ -83,6 +83,27 @@ void main() {
       }
     });
 
+    test("Should exclude tweet with too many chars", () {
+      // ARRANGE
+      final UTweatGenerator utweatGenerator = UTweatGenerator(
+        "{hello|coucou} {john|jane}",
+        maxChars: 20,
+      );
+
+      // ACT
+      List<String> values = utweatGenerator.listString;
+
+      // ASSERT
+      expect(values.length, 2);
+
+      for (var value in [
+        "hello john @byutweat",
+        "hello jane @byutweat",
+      ]) {
+        expect(values.contains(value), true);
+      }
+    });
+
     // test("Should return 3 results (2)", () {
     //   // ARRANGE
     //   final UTweatGenerator utweatGenerator =
