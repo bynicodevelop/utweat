@@ -1,0 +1,52 @@
+{
+    "contentCopiedToClipboard": "Your content is copied to clipboard",
+    "@contentCopiedToClipboard": {
+      "description": "Your content is copied to clipboard"
+    },
+    "helperNoContentPart1": "Try to enter this: ",
+    "@helperNoContentPart1": {
+      "description": "Try to enter this: "
+    },
+    "helperNoContentPart2": "then look at the possibilities",
+    "@helperNoContentPart2": {
+      "description": "then look at the possibilities"
+    },
+    "gettingStarted": "To start click on +",
+    "@gettingStarted": {
+      "description": "To start click on +"
+    },
+    "deletionContentMessage": "Deletion of your content, in progress...",
+    "@deletionContentMessage": {
+      "description": "Deletion of your content, in progress..."
+    },
+    "tweetEditor": "Tweet editor",
+    "@tweetEditor": {
+      "description": "Tweet editor"
+    },
+    "placeholderName": "Enter the description of pattern",
+    "@placeholderName": {
+      "description": "Enter the description of pattern"
+    },
+    "placeholderTweet": "Enter your content",
+    "@placeholderTweet": {
+      "description": "Enter your content"
+    },
+    "helperTweetPlaceholder": "Possibilities: {n}",
+    "@helperTweetPlaceholder": {
+      "description": "Possibilities: {n}",
+      "placeholders": {
+        "n": {
+          "type": "int",
+          "example": "0"
+        }
+      }
+    },
+    "cancelButton": "Cancel",
+    "@cancelButton": {
+      "description": "Cancel"
+    },
+    "createButton": "Create",
+    "@createButton": {
+      "description": "Create"
+    }
+}

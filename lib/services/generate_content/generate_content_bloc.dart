@@ -32,7 +32,7 @@ class GenerateContentBloc
         String content = contentFound.first;
 
         emit(GenerateContentLoadedState(
-          content: content,
+          content: utweatGenerator.listString.first,
         ));
 
         await contentRepository.updateContentUsed(

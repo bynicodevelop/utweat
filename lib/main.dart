@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:utweat/config/constants.dart';
 import 'package:utweat/respositories/abstracts/database_repository.dart';
 import 'package:utweat/respositories/content_repository.dart';
 import 'package:utweat/respositories/sqlite_repository.dart';
@@ -8,6 +9,8 @@ import 'package:utweat/services/add_content/add_content_bloc.dart';
 import 'package:utweat/services/delete_content/delete_content_bloc.dart';
 import 'package:utweat/services/generate_content/generate_content_bloc.dart';
 import 'package:utweat/services/list_content/list_content_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,8 +65,21 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'UTweat',
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale("en", ""),
+          Locale("fr", ""),
+        ],
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: kPrimaryMaterialColor,
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: kPrimaryMaterialColor,
+          ),
         ),
         home: const HomeScreen(),
       ),

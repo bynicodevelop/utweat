@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:utweat/components/content_editor_component.dart';
+import 'package:utweat/helpers/translate.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
 import 'package:utweat/services/delete_content/delete_content_bloc.dart';
 import 'package:utweat/services/generate_content/generate_content_bloc.dart';
@@ -32,31 +33,83 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('UTweat'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _modal(context),
+          ),
+        ],
       ),
-      body: BlocListener<GenerateContentBloc, GenerateContentState>(
-        listener: (context, state) async {
-          if (state is GenerateContentLoadedState) {
-            // print(state.content);
-            Map<String, dynamic> query = {
-              "text": state.content,
-            };
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<GenerateContentBloc, GenerateContentState>(
+            listener: (context, state) async {
+              if (state is GenerateContentLoadedState) {
+                await Clipboard.setData(
+                  ClipboardData(
+                    text: state.content,
+                  ),
+                );
 
-            await launch(Uri(
-                    scheme: "https",
-                    host: "twitter.com",
-                    path: "intent/tweet",
-                    queryParameters: query)
-                .toString());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      t(context)!.contentCopiedToClipboard,
+                    ),
+                  ),
+                );
 
-            context.read<ListContentBloc>().add(OnLoadedContentEvent());
-          }
-        },
+                context.read<ListContentBloc>().add(OnLoadedContentEvent());
+              }
+            },
+          ),
+          BlocListener<DeleteContentBloc, DeleteContentState>(
+            listener: (context, state) async {
+              if (state is DeleteContentSuccessState) {
+                context.read<ListContentBloc>().add(OnLoadedContentEvent());
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<ListContentBloc, ListContentState>(
           builder: (context, state) {
             if (state is ListContentInitialState) {
               return state.contents.isEmpty
-                  ? const Center(
-                      child: Text("No content"),
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: t(context)!.helperNoContentPart1,
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: [
+                                TextSpan(
+                                    text: "{hello|bonjour} {world|monde} ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2!
+                                        .copyWith(
+                                          fontStyle: FontStyle.italic,
+                                        )),
+                                TextSpan(
+                                  text: t(context)!.helperNoContentPart2,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            t(context)!.gettingStarted,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.all(8),
@@ -73,10 +126,10 @@ class HomeScreen extends StatelessWidget {
                                     duration: const Duration(
                                       seconds: 3,
                                     ),
-                                    content:
-                                        const Text("Your content was deleted"),
+                                    content: Text(
+                                        t(context)!.deletionContentMessage),
                                     action: SnackBarAction(
-                                      label: "Cancel",
+                                      label: t(context)!.cancelButton,
                                       onPressed: () {
                                         context
                                             .read<ListContentBloc>()
@@ -114,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                                 state.contents[index].description,
                               ),
                               subtitle: Text(
-                                "Reste : ${state.contents[index].possibilities - state.contents[index].contents.length}",
+                                "Tweets : ${state.contents[index].possibilities - state.contents[index].contents.length}",
                               ),
                               trailing: IconButton(
                                 onPressed: () async {
@@ -140,10 +193,6 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _modal(context),
-        child: const Icon(Icons.add),
       ),
     );
   }
