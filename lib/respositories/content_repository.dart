@@ -31,7 +31,11 @@ class ContentRepository {
       return ContentModel.fromJson({
         ...content,
         ...{
-          "contents": contentsUsed.map<String>((e) => e["content"]).toList(),
+          "contents": contentsUsed
+              .map<String>(
+                (e) => e["content"],
+              )
+              .toList(),
         }
       });
     }).toList());
