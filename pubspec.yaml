@@ -34,7 +34,9 @@ dependencies:
   flutter_bloc: ^8.0.0
   flutter_localizations:
     sdk: flutter
+  function_tree: ^0.8.12
   intl: ^0.17.0
+  math_expressions: ^2.2.0
   path: ^1.8.0
   sqflite: ^2.0.0+4
   url_launcher: ^6.0.15
@@ -50,7 +52,7 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   generate: true
-  
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -21,6 +21,8 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
 
   final FocusNode _contentFocusNode = FocusNode();
 
+  final String _expression = r"(\{[^\{\}]*\})";
+
   int _int = 0;
   late TextSelection _selection;
 
@@ -35,10 +37,12 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
 
       if (_contentController.text.isEmpty) return;
 
-      UTweatGenerator uTweatGenerator =
-          UTweatGenerator(_contentController.text);
+      UTweatGenerator uTweatGenerator = UTweatGenerator(
+        _contentController.text,
+        _expression,
+      );
 
-      setState(() => _int = uTweatGenerator.possibilities);
+      setState(() => _int = uTweatGenerator.possibilites());
     });
   }
 
@@ -220,15 +224,17 @@ class _ContentEditorControllerState extends State<ContentEditorController> {
                           _descriptionController.text.isEmpty
                       ? null
                       : () {
-                          UTweatGenerator uTweatGenerator =
-                              UTweatGenerator(_contentController.text);
+                          UTweatGenerator uTweatGenerator = UTweatGenerator(
+                            _contentController.text,
+                            _expression,
+                          );
 
                           context.read<AddContentBloc>().add(
                                 OnCreateNewContentEvent({
                                   "description": _descriptionController.text,
                                   "content": _contentController.text,
                                   "possibilities":
-                                      uTweatGenerator.possibilities,
+                                      uTweatGenerator.possibilites(),
                                 }),
                               );
                         },

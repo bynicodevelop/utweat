@@ -1,71 +1,174 @@
+import 'package:math_expressions/math_expressions.dart';
+
 class UTweatGenerator {
   final String pattern;
-  late final Iterable<RegExpMatch> matches;
-  final String branding;
-  final int maxChars;
+  final String regex;
 
-  UTweatGenerator(
-    this.pattern, {
-    this.branding = "@byutweat",
-    this.maxChars = 280,
+  const UTweatGenerator(
+    this.pattern,
+    this.regex,
+  );
+
+  List<String> matches({
+    String? pattern,
   }) {
+    pattern ??= this.pattern;
+
+    RegExp regExp = RegExp(regex);
+
+    Iterable<RegExpMatch> matches = regExp.allMatches(pattern);
+
+    return matches.map((match) => match.group(0)!).toList();
+  }
+
+  List<String> extractPin(String pin) {
     RegExp regExp = RegExp(r"\{([^\{\}]*)\}");
 
-    matches = regExp.allMatches(pattern);
+    Iterable<RegExpMatch> matches = regExp.allMatches(pin);
+
+    return matches.map((match) => match.group(1)!).first.split("|");
   }
 
-  int _basePossibilites() {
-    List<int> nMaches = [];
+  Map<String, dynamic> extractPins(List<String> pins) {
+    Map<String, dynamic> result = {};
 
-    for (int i = 0; i < matches.length; i++) {
-      final List<String> pin = matches.elementAt(i).group(1)!.split("|");
-      nMaches.add(pin.length);
+    for (String pin in pins) {
+      result[pin] = extractPin(pin);
     }
 
-    return nMaches.fold(1, (previous, current) => previous * current);
+    return result;
   }
 
-  String _generateContent() {
-    String content = pattern;
+  List<Map<String, int>> convertSpinToPossibilites(List<String> spins) =>
+      spins.map((spin) {
+        Map<String, int> result = {};
 
-    return matches.fold(content, (previousValue, currentValue) {
-      List<String> pins = currentValue.group(1)!.split("|");
-      pins.shuffle();
+        result[spin] = spin.split("|").length;
 
-      return previousValue.replaceAll("{${currentValue.group(1)}}", pins.first);
-    });
+        return result;
+      }).toList();
+
+  int possibilites({
+    String? pattern,
+  }) {
+    pattern ??= this.pattern;
+
+    String expression = pattern.split('').where((char) {
+      if (char == '{' || char == '}' || char == '|') {
+        return true;
+      }
+
+      return false;
+    }).map((char) {
+      if (char == '{') {
+        return '(1';
+      }
+
+      if (char == '}') {
+        return ')';
+      }
+
+      if (char == '|') {
+        return '+1';
+      }
+
+      return char;
+    }).join();
+
+    if (expression.isEmpty) {
+      return 1;
+    }
+
+    expression = expression
+        .split(")(")
+        .join(")*(")
+        .split("+1(")
+        .join("+(")
+        .split("1(")
+        .join("1+(");
+
+    Parser p = Parser();
+    Expression exp = p.parse(expression);
+
+    Variable x = Variable('x');
+
+    ContextModel cm = ContextModel();
+    cm.bindVariable(x, exp);
+
+    int eval = (exp.evaluate(EvaluationType.REAL, cm)).toInt();
+
+    return eval;
   }
 
-  List<String> _generateListContent(int nPossibilites) {
+  List<String> listPossibilitesFromPipe(String value) => value.split("|");
+
+  String generateContent({
+    String? pattern,
+  }) {
+    pattern ??= this.pattern;
+
+    List<String> listMatch = matches(
+      pattern: pattern,
+    );
+
+    Map<String, dynamic> mapPins = extractPins(listMatch);
+
+    return mapPins.entries.fold<String>(
+      pattern,
+      (previousValue, element) {
+        (element.value as List<String>).shuffle();
+
+        return previousValue.replaceAll(
+          element.key,
+          element.value.first,
+        );
+      },
+    );
+  }
+
+  String _generate(String content) {
+    content = generateContent(
+      pattern: pattern,
+    );
+
+    List<String> listMatch = matches(
+      pattern: content,
+    );
+
+    if (listMatch.isNotEmpty) {
+      content = generateContent(
+        pattern: content,
+      );
+    }
+
+    return content;
+  }
+
+  List<String> generate({
+    int limit = 100,
+  }) {
+    int i = 0;
+    int n = possibilites();
+
+    bool limitNotExceeded = true;
+
     List<String> list = [];
 
-    while (list.length < nPossibilites) {
-      String content = "${_generateContent()} $branding";
+    while (list.length < n && limitNotExceeded) {
+      String content = _generate(pattern);
 
       if (!list.contains(content)) {
         list.add(content);
       }
+
+      i++;
+
+      if (i == limit) {
+        print("Limit exceeded");
+        limitNotExceeded = false;
+      }
     }
 
     return list;
-  }
-
-  List<String> get listString {
-    int numberPossibilites = _basePossibilites();
-
-    List<String> list = _generateListContent(numberPossibilites);
-
-    return list.where((content) => content.length <= maxChars).toList();
-  }
-
-  int get possibilities {
-    int numberPossibilites = _basePossibilites();
-
-    List<String> list = _generateListContent(numberPossibilites);
-
-    numberPossibilites =
-        list.where((content) => content.length <= maxChars).length;
-
-    return numberPossibilites;
   }
 }

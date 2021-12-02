@@ -23,16 +23,21 @@ class GenerateContentBloc
         List<String> contentsUsed =
             await contentRepository.getContentsUsed(event.uid);
 
-        UTweatGenerator utweatGenerator = UTweatGenerator(contentModel.content);
+        UTweatGenerator utweatGenerator = UTweatGenerator(
+          contentModel.content,
+          r"(\{[^\{\}]*\})",
+        );
 
-        List<String> contentFound = utweatGenerator.listString
+        List<String> contentGenerated = utweatGenerator.generate();
+
+        List<String> contentFound = contentGenerated
             .where((content) => !contentsUsed.contains(content))
             .toList();
 
         String content = contentFound.first;
 
         emit(GenerateContentLoadedState(
-          content: utweatGenerator.listString.first,
+          content: content,
         ));
 
         await contentRepository.updateContentUsed(
