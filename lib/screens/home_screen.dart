@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:utweat/components/content_editor_component.dart';
+import 'package:utweat/components/countdown_snackbar_component.dart';
 import 'package:utweat/helpers/translate.dart';
 import 'package:utweat/services/add_content/add_content_bloc.dart';
 import 'package:utweat/services/delete_content/delete_content_bloc.dart';
@@ -120,14 +123,24 @@ class HomeScreen extends StatelessWidget {
                             "$index-${DateTime.now().microsecondsSinceEpoch}",
                           ),
                           onDismissed: (direction) {
+                            const int deleteDuration = 3;
+
+                            const Duration duration = Duration(
+                              seconds: deleteDuration,
+                            );
+
+                            Timer.periodic(
+                              duration,
+                              (Timer timer) {},
+                            );
+
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(
                                   SnackBar(
-                                    duration: const Duration(
-                                      seconds: 3,
+                                    duration: duration,
+                                    content: const CountdownSnackBarComponent(
+                                      seconds: deleteDuration,
                                     ),
-                                    content: Text(
-                                        t(context)!.deletionContentMessage),
                                     action: SnackBarAction(
                                       label: t(context)!.cancelButton,
                                       onPressed: () {

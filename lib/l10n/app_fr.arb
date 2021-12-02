@@ -15,9 +15,15 @@
     "@gettingStarted": {
       "description": "To start click on +"
     },
-    "deletionContentMessage": "Suppression de votre contenu, en cours...",
+    "deletionContentMessage": "Suppression de votre contenu, en cours ({n})...",
     "@deletionContentMessage": {
-      "description": "Deletion of your content, in progress..."
+      "description": "Deletion of your content, in progress...",
+      "placeholders": {
+        "n": {
+          "type": "int",
+          "example": "0"
+        }
+      }
     },
     "tweetEditor": "Editeur de tweets",
     "@tweetEditor": {
