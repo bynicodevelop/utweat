@@ -77,6 +77,7 @@ class HomeScreen extends StatelessWidget {
         child: BlocBuilder<ListContentBloc, ListContentState>(
           builder: (context, state) {
             if (state is ListContentInitialState) {
+              print(state.contents.length);
               return state.contents.isEmpty
                   ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,

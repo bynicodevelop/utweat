@@ -11,15 +11,19 @@ class ContentRepository {
   final StreamController<List<ContentModel>> _contentController =
       StreamController.broadcast();
 
+  final StreamController<List<ContentModel>> _contentControllerTmp =
+      StreamController.broadcast();
+
   final List<ContentModel> _contentList = [];
 
-  Stream<List<ContentModel>> get contents => _contentController.stream;
+  Stream<List<ContentModel>> get contents =>
+      _contentController.stream.asBroadcastStream();
 
   Future<void> load() async {
     List<Map<String, dynamic>> contents =
         await databaseRepository.all("contents");
 
-    List<ContentModel> contentModel =
+    List<ContentModel> contentsModel =
         await Future.wait(contents.map((content) async {
       List<Map<String, dynamic>> contentsUsed =
           await databaseRepository.allByJoinId(
@@ -35,8 +39,14 @@ class ContentRepository {
       });
     }).toList());
 
-    _contentList.addAll(contentModel);
-    _contentController.add(contentModel);
+    print("coucou");
+    print(contentsModel
+        .where((contentModel) => !_contentList.contains(contentModel))
+        .toList()
+        .length);
+
+    _contentList.addAll(contentsModel);
+    _contentController.add(contentsModel);
   }
 
   Future<void> createNewContent(Map<String, dynamic> data) async {
@@ -49,7 +59,7 @@ class ContentRepository {
       },
     });
 
-    databaseRepository.insert(contentModel);
+    await databaseRepository.insert(contentModel);
 
     _contentList.add(contentModel);
 
@@ -72,6 +82,8 @@ class ContentRepository {
     _contentList.removeWhere(
       (ContentModel contentModel) => contentModel.uid == uid,
     );
+
+    _contentList.addAll(_contentList);
 
     _contentController.add(_contentList);
   }
