@@ -11,9 +11,6 @@ class ContentRepository {
   final StreamController<List<ContentModel>> _contentController =
       StreamController.broadcast();
 
-  final StreamController<List<ContentModel>> _contentControllerTmp =
-      StreamController.broadcast();
-
   final List<ContentModel> _contentList = [];
 
   Stream<List<ContentModel>> get contents =>
@@ -38,12 +35,6 @@ class ContentRepository {
         }
       });
     }).toList());
-
-    print("coucou");
-    print(contentsModel
-        .where((contentModel) => !_contentList.contains(contentModel))
-        .toList()
-        .length);
 
     _contentList.addAll(contentsModel);
     _contentController.add(contentsModel);

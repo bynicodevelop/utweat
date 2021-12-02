@@ -16,8 +16,6 @@ class ListContentBloc extends Bloc<ListContentEvent, ListContentState> {
           contents: [],
         )) {
     contentRepository.contents.listen((contents) {
-      print(contents);
-
       add(_OnLoadedContentEvent(
         refresh: DateTime.now().microsecondsSinceEpoch,
         contents: contents,

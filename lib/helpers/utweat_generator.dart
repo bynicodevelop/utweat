@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:math_expressions/math_expressions.dart';
 
 class UTweatGenerator {
@@ -164,7 +166,7 @@ class UTweatGenerator {
       i++;
 
       if (i == limit) {
-        print("Limit exceeded");
+        developer.log("Limit exceeded");
         limitNotExceeded = false;
       }
     }
